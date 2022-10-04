@@ -1,23 +1,30 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import { useGoogleDrive } from './hooks';
+import { VideoPlayer } from './components';
+import ReactPlayer from 'react-player';
+
 import './App.css';
 
 function App() {
+  const { handleOpenPicker, data } = useGoogleDrive();
+  const [access, setAccess] = useState('file');
+  
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="access-buttons">
+        <button onClick={() => setAccess('file')}>File</button>
+        <button onClick={() => setAccess('drive')}>Drive</button>
+      </div>
+      <div className="player">
+        {access === 'file' ? (
+          <VideoPlayer />
+        ) : (
+          <>
+            <button onClick={() => handleOpenPicker()}>Open Picker</button>
+            <ReactPlayer url={data?.docs?.embedUrl || "https://www.youtube.com/watch?v=zTitoHKsyJg"} controls/>
+          </>
+        )}
+      </div>   
     </div>
   );
 }
